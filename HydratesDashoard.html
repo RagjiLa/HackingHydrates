@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/jquery.canvasjs.min.js"></script>
+    <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+    <script type="text/javascript">
+        var curveDp = [];
+        var operatingDp = [];
+        var chart = null;
+        $(function () {
+            var trendoptions = {
+                animationEnabled: true,
+                title: {
+                    text: "Current Operating point"
+                },
+                data: [
+                    {
+                        type: "spline",
+                        name: "Hydrate Curve for choke position.",
+                        showInLegend: true,
+                        dataPoints: curveDp
+                    },
+                    {
+                        name: "Current operating point.",
+                        type: "spline",
+                        showInLegend: true,
+                        dataPoints: operatingDp
+                    }
+                ]
+            };
+            chart = new CanvasJS.Chart("chartContainer", trendoptions);
+            chart.render();
+            setInterval(function () { updateChart() }, 1000);
+        });
+
+        function updateChart() {
+          
+            for (var j = 0; j < 100; j++) {
+                curveDp[j] = {
+                    x: j + 0.1,
+                    y: Math.exp(j/100)
+            };
+            };
+            operatingDp[0] = {
+                x: 50,
+                y: Math.round(5 + Math.random() * (-5 - 5))
+            };
+            chart.render();
+        }
+    </script>
+
+</head>
+<body>
+    <header class="w3-container w3-teal">
+        <h1>Hydrate Prediction</h1>
+    </header>
+
+    <div class="w3-container">
+        <div id="chartContainer" style="height: 400px; width: 100%;"></div>
+    </div>
+    <div class="w3-container w3-section w3-center">
+        <div style="width: 200px;height:100px" class="w3-tag  w3-teal"><h3>TEMPERATURE</h3>32°C</div>
+        <div style="width: 200px;height:100px" class="w3-tag  w3-teal"><h3>PRESSURE</h3>50 bar</div>
+        <div style="width: 200px; height: 100px" class="w3-tag  w3-teal"><h3>WATER</h3>10 gallon</div>
+        <div style="width: 200px;height:100px" class="w3-tag  w3-teal"><h3>Choke Position</h3>30% Open</div>
+    </div>
+    <div class="w3-container w3-section w3-red">
+        <span onclick="this.parentElement.style.display = 'none'" class="w3-closebtn">&times;</span>
+        <h3>Danger!</h3>
+        <p>Hydrates formation has started, Probability 100% @ 4:45 PM 4/14/2016, inject chemical at once.</p>
+    </div>
+
+    <div class="w3-container w3-section w3-yellow">
+        <span onclick="this.parentElement.style.display = 'none'" class="w3-closebtn w3-hover-text-red">&times;</span>
+        <h3>Warning!</h3>
+        <p>Hydrates formation can occur, Probability 75% @ 4:45 PM 4/14/2016, be ready for chemical injection.</p>
+    </div>
+
+    <div class="w3-container w3-section w3-blue">
+        <span onclick="this.parentElement.style.display = 'none'" class="w3-closebtn">&times;</span>
+        <h3>Info!</h3>
+        <p>Hydrates formation can occur, Probability 50% @ 4:45 PM 4/14/2016..</p>
+    </div>
+    <div class="w3-container w3-section w3-green">
+        <span onclick="this.parentElement.style.display='none'" class="w3-closebtn">&times;</span>
+        <h3>Stable!</h3>
+        <p>No Hydrate formation</p>
+    </div>
+</body>
+</html>
