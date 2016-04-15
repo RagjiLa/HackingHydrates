@@ -17,6 +17,13 @@
                 title: {
                     text: "Current Operating point"
                 },
+                axisX: {
+                    title: "Temperature"
+                },
+
+                axisY: {
+                    title: "Pressure"
+                },
                 data: [
                     {
                         type: "spline",
@@ -38,18 +45,19 @@
         });
 
         function updateChart() {
-          
-            for (var j = 0; j < 100; j++) {
-                curveDp[j] = {
-                    x: j + 0.1,
-                    y: Math.exp(j/100)
-            };
-            };
-            operatingDp[0] = {
-                x: 50,
-                y: Math.round(5 + Math.random() * (-5 - 5))
-            };
-            chart.render();
+
+            $.getJSON("http://hydra.run.aws-usw02-pr.ice.predix.io/hydrateCurve",
+                function (data) {
+                    for (var j = 0; j < 100; j++) { curveDp[j] = data[j]; };
+                    $.getJSON("http://hydra.run.aws-usw02-pr.ice.predix.io/operatingPoint",
+                function (data) {
+                    operatingDp[0] = data;
+                    chart.render();
+                    $("#tempCV").text(data.x);
+                    $("#pressureCV").text(data.y);
+                });
+                });
+
         }
     </script>
 
@@ -60,11 +68,11 @@
     </header>
 
     <div class="w3-container">
-        <div id="chartContainer" style="height: 400px; width: 100%;"></div>
+        <div id="chartContainer" style="height: 500px; width: 100%;"></div>
     </div>
     <div class="w3-container w3-section w3-center">
-        <div style="width: 200px;height:100px" class="w3-tag  w3-teal"><h3>TEMPERATURE</h3>32°C</div>
-        <div style="width: 200px;height:100px" class="w3-tag  w3-teal"><h3>PRESSURE</h3>50 bar</div>
+        <div style="width: 200px;height:100px" class="w3-tag  w3-teal"><h3>TEMPERATURE</h3><span id="tempCV" >32</span> °C</div>
+        <div style="width: 200px;height:100px" class="w3-tag  w3-teal"><h3>PRESSURE</h3><span id="pressureCV">32</span> bar</div>
         <div style="width: 200px; height: 100px" class="w3-tag  w3-teal"><h3>WATER</h3>10 gallon</div>
         <div style="width: 200px;height:100px" class="w3-tag  w3-teal"><h3>Choke Position</h3>30% Open</div>
     </div>
